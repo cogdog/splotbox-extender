@@ -192,3 +192,7 @@ function  splotboxplus_get_videoplayer( $url ) {
 
 }
 ````
+
+## Get the gist of it
+
+* [splotbox-extender-splotca.php](https://gist.github.com/cogdog/3c26a103c020b1835c38547db6a534fd) You can look at version of the SPLOTbox Extender plugin in use at http://splot.ca/box
