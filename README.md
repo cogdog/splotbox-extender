@@ -163,10 +163,10 @@ function splotboxplus_audio_allowables() {
 }
 ````
 
-Finally, for each service we are writing a custom link to embed interpreter, we add an entry to the function `splotboxplus_get_videoplayer( $url )` (ignore the 'video' in the function name, it can be for any kind of service for which an embed code can be written).
+Finally, for each service we are writing a custom link to embed interpreter, we add an entry to the function `splotboxplus_get_mediaplayer( $url )`.
 
 ````
-function  splotboxplus_get_videoplayer( $url ) {
+function  splotboxplus_get_mediaplayer( $url ) {
 	/*	Custom functions for creating embed codes from URLs, e.g. for 
 	    ones not supported directly by WordPress. Generally this is parsing
 	    the media URL for codes used to return an iframe HYTML to embed content.

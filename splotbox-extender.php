@@ -3,7 +3,7 @@
 Plugin Name: SPLOTbox Extender
 Plugin URI: https://github.com/cogdog/splotbox-extender
 Description: With some elbow grease, you can extend the functionality of a SPLOTbox site to support more media sites than the original theme. This plugin is a template and should be edited for your own site use.
-Version: 0.3
+Version: 0.4
 License: GPLv2
 Author: Alan Levine
 Author URI: https://cog.dog
@@ -88,15 +88,13 @@ function splotboxplus_embed_allowables() {
 }
 
 
-function  splotboxplus_get_videoplayer( $url ) {
+function splotboxplus_get_mediaplayer( $url ) {
 	/*	Custom functions for creating embed codes from URLs, e.g. for 
 	    ones not supported directly by WordPress. Generally this is parsing
 	    the media URL for codes used to return an iframe HYTML to embed content.
 	    
 	    Somewhat modeled after https://codex.wordpress.org/Function_Reference/wp_embed_register_handler
 	    w/o using filters.
-	    
-	    Mote: the function has "video" in it but can be any media site thatb provides embed code  
 	*/
 
 	// The ones below are provided as examples
@@ -131,9 +129,12 @@ function  splotboxplus_get_videoplayer( $url ) {
 		*/
 	} 
 	
-	
 	// none used
 	return '';
+}
 
+function  splotboxplus_get_videoplayer( $url ) {
+	// catch for older versions of plugin that used this function name
+	splotboxplus_get_mediaplayer( $url );
 }
 ?>
