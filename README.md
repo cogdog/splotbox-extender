@@ -13,17 +13,23 @@ by Alan Levine https://cog.dog or http://cogdogblog.com/
 
 ## What is this?
 
-The SPLOTbox theme supports collection of media from external media services simply by providing a URL to where it exists there (e.g. the URL to a YouTube video page or a Giphy entry). "Out of the box" this theme is able to embed media for a number of the ones [WordPress supports by Embed](https://wordpress.org/support/article/embeds/#okay-so-what-sites-can-i-embed-from) plus the following that have been added to the theme by custom code
+The [SPLOTbox WordPress theme](https://github.com/cogdog/splotbox) supports collection of media from external media services simply by providing a URL to where it exists there (e.g. the URL to a YouTube video page or a Giphy entry). 
+
+"Out of the box" this theme is able to embed media for a number of the ones [WordPress supports by Embed](https://wordpress.org/support/article/embeds/#okay-so-what-sites-can-i-embed-from) plus the following that have been added to the theme by custom code
 
 * Internet Archive (audio or video)
 * Adobe Spark Pages
 * Adobe Spark Video
 
-The aim has to provide support for a reasonable number of media sites of common interest. But often, a site may want to either add additional ones from the [WordPress supported list](https://wordpress.org/support/article/embeds/#okay-so-what-sites-can-i-embed-from) or write the special code needed to add support for other sites.
+The aim has to provide support for a reasonable number of media sites of common interest. 
 
-For the former case, it's a matter of choosing the medis site to add, perhaps it is Daily Motion for video
+But your own site may want to either add additional ones from the [WordPress supported list](https://wordpress.org/support/article/embeds/#okay-so-what-sites-can-i-embed-from) or write the special code needed to add support for maybe more specialized media sites.
 
-For the latter case, the URL for a given piece of media on the site should be able to be parsed for an id string that can be substituted into the embed code the site provided. For example, the way this is done built in for audio/video from the internet archive, a link for a Tom and Jerry video
+For the former case, it's a matter of choosing the  site to add, perhaps it is Daily Motion for video.
+
+For the latter case, the URL for a given piece of media on the site should be (1) recognizable as the type of media; and (2) able to be parsed for an id string that can be substituted into the embed code the site provided. 
+
+For example, the way this is done built in for audio/video from the internet archive (all urls include `archive.org/details`), a link for a Tom and Jerry video
 
     https://archive.org/details/Jolly_Fish_1932
 
@@ -42,7 +48,11 @@ Adding this kind of support will require some proficiency in PHP and perhaps eve
 
 ## More Template than Plugin
 
-On it's own, adding this plugin will not do anything for your SPLOTbox! It needs to be customized to add support for the sites being added, before being uploaded to your site. Proceed at your own risk. If you seek support for your own customizations, contact me.
+On it's own, adding this plugin will not do anything for your SPLOTbox! 
+
+It needs to be customized to add support for the sites being added, before being uploaded to your site. Proceed at your own risk. 
+
+If you seek support for your own customizations, contact me.
 
 ## Extending For WordPress Supported Embed sites
 
