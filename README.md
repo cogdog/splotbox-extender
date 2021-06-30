@@ -45,8 +45,7 @@ uses the following embed code:
 
 So we can see the pattern for creating the embed code is to use the URL for `src=""` but replace `details` with `embed`.
 
-3. For services that offer oEmbed URLs, you can add code that adds these sites as additional providers (e.k. [Kaltura media servers](https://www.kaltura.org
-)). Again, each source needs to be added in this plugin. 
+3. For services that offer oEmbed URLs, you can add code that adds these sites as additional providers (e.k. [Kaltura media servers](https://www.kaltura.org)). Again, each source needs to be added in this plugin. 
 
 
 ## More Template than Plugin
