@@ -2,8 +2,8 @@
 /*
 Plugin Name: SPLOTbox Extender
 Plugin URI: https://github.com/cogdog/splotbox-extender
-Description: With some elbow grease, you can extend the functionality of a SPLOTbox site to support more media sites than the original theme. This plugin is a template and should be edited for your own site use. 
-Version: 0.41
+Description: With some elbow grease manual coding, you can extend the functionality of a SPLOTbox site to support more media sites than the original theme.
+Version: 0.6
 License: GPLv2
 Author: Alan Levine
 Author URI: https://cog.dog
@@ -17,91 +17,104 @@ function splotboxplus_exists() {
 	return TRUE;
 }
 
-// Customize the functions below to add support for other media sites
+function splotboxplus_supports( ) {
+	// Names of all sites supported via by this plugin
+	// $supports = array('Metacafe', 'Transistor', 'Imgur', );
+	// $supports = array(); for none
 
+	// e.g.
+	// $supports = array('Metacafe', 'Transistor', 'Imgur', 'Big Kaltura^' );
 
-function splotboxplus_supports() {
-	/* array of names of all sites added via this plugin, used for display on share form
-       called by SPLOTbox includes/media.php --> splotbox_supports()
-
-	   $supports = array('Metacafe', 'Transistor');
-	   $supports = array(); for none
-	*/
-
-	$supports = array();
+	$supports = array('Animoto', 'Metacafe', 'Transistor', 'Imgur', 'Daily Motion', 'BC Campus Kaltura', 'KPU Kaltura', 'TRU Media');
 
 	return $supports;
 }
 
 function splotboxplus_video_allowables() {
-	/* add the domain fragments to identify supported video type URLs
-	   called by SPLOTbox includes/media.php --> url_is_video ( $url )
+	// Add domain match strings to identify supported video type URLs
+	// e.g. $allowables = array('animoto.com', 'dailymotion.com', 'metacafe.com', 'video.bigu.ca/id');
+	// $allowables = array(); for none
 
-	   $allowables = array('metacafe.com', 'someother.com/video);
-	   $allowables = array(); for none
-	*/
-
-	$allowables = array();
+	$allowables = array('animoto.com', 'dailymotion.com', 'metacafe.com', 'video.bccampus.ca/media', 'media.kpu.ca/media', 'media.tru.ca/media/');
 
 	return $allowables;
 }
 
 
 function splotboxplus_audio_allowables() {
-	/* add domain fragments to identify supported audio type URLs
-	   called by SPLOTbox includes/media.php --> url_is_audio ( $url )
+	// Add domain match strings to identify supported audio type URLs
+	// e.g.
+	// $allowables = array('share.transistor.fm');
+	// $allowables = array(); for none
 
-	   $allowables = array('transistor.fm', 'soundsite.net/sounds);
-	   $allowables = array(); for none
-	*/
-	$allowables = array();
+	$allowables = array('share.transistor.fm');
 
 	return $allowables;
 }
 
 function splotboxplus_image_allowables() {
-	/* add domain fragments to identify supported image type URLs
-	   called by SPLOTbox includes/media.php --> url_is_image ( $url )
+	// Add domain match strings to identify supported image type URLs
+	// $allowables = array(); for none
+	// $allowables = array('imgur.com')
 
-	   $allowables = array('imgur.com')
-	   $allowables = array(); for none
-	*/
-
-	$allowables = array();
+	$allowables = array('imgur.com');
 
 	return $allowables;
 }
+
 
 function splotboxplus_embed_allowables() {
-	/* add domain fragments to identify string match supported embeddable media beyond
-	   ones supported by SPLOTbox
-	   e.g. from https://wordpress.org/support/article/embeds/#okay-so-what-sites-can-i-embed-from
-	   called by SPLOTbox includes/media.php --> is_url_embeddable( $url )
+	// add domain fragments to identify WordPress supported embeddable media beyond
+	// YouTube, vimeo, soundcloud, TED, giphy
+	// from https://wordpress.org/support/article/embeds/#okay-so-what-sites-can-i-embed-from
 
-	   $allowables = array('dailymotion.com', 'imgur.com');
-	   $allowables = array(); for none
-	*/
+	// as well as ones added as oembed providers via splotboxplus_add_oembed_handlers()
 
-	$allowables = array();
+	// e.g. $allowables = array('dailymotion.com', 'imgur.com', 'video.bccampus.ca/id');
+	// $allowables = array(); for none
+
+	$allowables = array('dailymotion.com', 'animoto.com', 'imgur.com', 'video.bccampus.ca/media', 'media.kpu.ca/media', 'media.tru.ca/media/');
 
 	return $allowables;
 }
 
+// here we set up oEmbed providers
+// comment this line out if no oEmbed providers used
+add_action( 'init', 'splotboxplus_add_oembed_handlers');
 
-function splotboxplus_get_mediaplayer( $url ) {
-	/*	Custom functions for creating embed codes from URLs, e.g. for
-	    ones not supported directly by WordPress. Generally this is parsing
-	    the media URL for codes used to return an iframe HYTML to embed content.
+function splotboxplus_add_oembed_handlers(){
+	// add/edit this statement as needed to match the oembed format of whatever service is added
+	//    c.f. https://developer.wordpress.org/reference/functions/wp_oembed_add_provider/
+	//
+	//    e.g.
+	// wp_oembed_add_provider( 'https://video.bccampus.ca/id/*', 'https://video.bccampus.ca/oembed/', false );
 
-	    Somewhat modeled after https://codex.wordpress.org/Function_Reference/wp_embed_register_handler
-	    w/o using filters.
-	*/
 
-	// The ones below are provided as examples
+	// BC Campus Kaltura
+    wp_oembed_add_provider( 'https://video.bccampus.ca/media/*', 'https://video.bccampus.ca/oembed/', false );
 
-	/*
-	// transistor convert url to embed
-	 if ( is_in_url( 'share.transistor.fm', $url ) ) {
+    // TRU Kaltura
+    wp_oembed_add_provider( 'https://media.tru.ca/media/*', 'https://media.tru.ca/oembed/', false );
+
+    // KPU Kaltura
+    wp_oembed_add_provider( 'https://media.kpu.ca/media/*', 'https://media.kpu.ca/oembed/', false );
+}
+
+
+function  splotboxplus_get_mediaplayer( $url ) {
+	// convert media URL to embed code for sites not supported by automatic embeds
+	// these will need to be constructed to find a match pattern via string replace or regex ex
+
+	// begin check for each custom player type, here is a sample
+	 if ( is_in_url( 'metacafe.com/watch', $url ) ) {
+
+		// substition to get embed URL
+		$metacafe_url = str_replace ( 'watch' , 'embed' , $url );
+
+		return ('<iframe width="560" height="315" src="' . $metacafe_url . '?autostart=0" frameborder="0"  allowfullscreen></iframe>');
+	}
+
+	if ( is_in_url( 'share.transistor.fm', $url ) ) {
 
 		// substition to get embed URL
 		$embed_url = str_replace ( '.fm/s/' , '.fm/e/' , $url );
@@ -110,28 +123,7 @@ function splotboxplus_get_mediaplayer( $url ) {
 
 	}
 
-	// metacafe convert url to embed
-	 if ( is_in_url( 'metacafe.com/watch', $url ) ) {
-
-		// substition to get embed URL
-		$metacafe_url = str_replace ( 'watch' , 'embed' , $url );
-
-		return ('<iframe width="560" height="315" src="' . $metacafe_url . '?autostart=0" frameborder="0"  allowfullscreen></iframe>');
-
-	// Internet Archive (already supported by main SPLOTbox, code here for example onlu
-
-	if ( is_in_url( 'archive.org', $url ) ) {
-
-		$archiveorg_url = str_replace ( 'details' , 'embed' , $url );
-
-		return ('<iframe src="' . $archiveorg_url . '" width="640" height="480" frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen></iframe>');
-
-
-	}
-
-	*/
-
-	// none used
+	// nothing else
 	return '';
 }
 

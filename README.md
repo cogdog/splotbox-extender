@@ -21,13 +21,16 @@ The [SPLOTbox WordPress theme](https://github.com/cogdog/splotbox) supports coll
 * Adobe Spark Pages
 * Adobe Spark Video
 
-The aim has to provide support for a reasonable number of media sites of common interest. 
+The aim has to provide support in the SPLOTbox theme for a reasonable number of media sites of common interest. 
 
-But your own site may want to either add additional ones from the [WordPress supported list](https://wordpress.org/support/article/embeds/#okay-so-what-sites-can-i-embed-from) or write the special code needed to add support for maybe more specialized media sites.
+This plugin provides a way to include support for additional services not currently used in SPLOTBox. You can see it in action at the main SPLOTbox demo site http://splot.ca/box
 
-For the former case, it's a matter of choosing the  site to add, perhaps it is Daily Motion for video.
+Adding this kind of support will require some proficiency in PHP and perhaps even regular expressions for pattern matching / replacement. Gotta get you code hands dirty with this one. 
 
-For the latter case, the URL for a given piece of media on the site should be (1) recognizable as the type of media; and (2) able to be parsed for an id string that can be substituted into the embed code the site provided. 
+This can happen in three ways, with examples detailed more below.
+
+1. Add support for [others that WordPress supports ](https://wordpress.org/support/article/embeds/#okay-so-what-sites-can-i-embed-from) that are not made available in the theme. Perhaps it is [Daily Motion](http://dailymotion.com) for video. Why are they not all in there? Well the list is long and would clutter the interface, and many of them are pretty niche interest for general use. Yes, this developer has executed some editorial decisions on the SPLOTbox theme.
+2. Create custom code to add support for additional sites. This is a case where the URL for a media item can be parsed to identify the source, e.g. for Internet Archive built into the theme. The other requirement is that this URL can be parsed to extract a single item reference ID that can be used to build the iframe embed code.
 
 For example, the way this is done built in for audio/video from the internet archive (all urls include `archive.org/details`), a link for a Tom and Jerry video
 
@@ -42,9 +45,9 @@ uses the following embed code:
 
 So we can see the pattern for creating the embed code is to use the URL for `src=""` but replace `details` with `embed`.
 
-This plugin provides a way to include support for additional services not currently used in SPLOTBox. You can see it in action at the main SPLOTbox demo site http://splot.ca/box
+3. For services that offer oEmbed URLs, you can add code that adds these sites as additional providers (e.k. [Kaltura media servers](https://www.kaltura.org
+)). Again, each source needs to be added in this plugin. 
 
-Adding this kind of support will require some proficiency in PHP and perhaps even regular expressions for pattern matching / replacement. Gotta get you code hands dirty with this one.
 
 ## More Template than Plugin
 
@@ -52,130 +55,134 @@ On it's own, adding this plugin will not do anything for your SPLOTbox!
 
 It needs to be customized to add support for the sites being added, before being uploaded to your site. Proceed at your own risk. 
 
-If you seek support for your own customizations, contact me.
+### Register Name of the Service
 
-## Extending For WordPress Supported Embed sites
-
-This section describes the code needed to add support from the [list of WordPress Embed supported sites](https://wordpress.org/support/article/embeds/#okay-so-what-sites-can-i-embed-from) for example, video from Daily Motion (http://dailymotion.com/) and Animoto (http://animoto.com/) and images/gifs from Imgur (http://imgur.com).
-
-We first modify the `splotboxplus_supports()` function - this provides an array of the names of all services added by this plugin. The order does not matter (the theme will sort alphabetically)
-
-````
+Modify `splotboxplus_supports()` to include all services added in this plugin. This is used to indicate support on the sharing form (see [example](http://splot.ca/box)). 
+```
 function splotboxplus_supports() {
-	/* array of names of all sites added via this plugin, used for display on share form
-       called by SPLOTbox includes/media.php --> splotbox_supports()
-	   $supports = array(); for none
-	*/
-	
-	$supports = array('Animoto', 'Imgur', 'Daily Motion');
+	// Names of all sites supported via by this plugin
+	// $supports = array('Metacafe', 'Transistor', 'Imgur', );
+
+	// e.g.
+	// $supports = array('Metacafe', 'Transistor', 'Imgur', 'Big Kaltura' );
+
+	$supports = array('Animoto', 'Metacafe', 'Transistor', 'Imgur', 'Daily Motion', 'BC Campus Kaltura', 'KPU Kaltura');
+
 	return $supports;
 }
-````
+```
 
-Next, we modify `splotboxplus_video_allowables()` to list the URL fragments that should be identified as video format (the order does not matter). This would be the URL patterns for content from MetaCafe and Daily Motion.
+If there are no values here, then there's no reason to use the plugin!
 
-````
+
+### Identify URL Pattern For Type of Media
+To verify URLs and indicate the media type (audio, video, or image) add to the appropriate function a URL pattern than indicates a site as a media type.
+
+```
 function splotboxplus_video_allowables() {
-	/* add the domain fragments to identify supported video type URLs
-	   called by SPLOTbox includes/media.php --> url_is_video ( $url )
-	   
-	   $allowables = array(); for none
-	*/
-	
-	$allowables = array('animoto.com', 'dailymotion.com');
+	// Add domain match strings to identify supported video type URLs
+	// e.g. $allowables = array('animoto.com', 'dailymotion.com', 'metacafe.com', 'video.bigu.ca/media');
+	// $allowables = array(); for none
 
-	return $allowables;
-}
-````
-
-Then, we modify `splotboxplus_image_allowables()` to include the URL fragment for the one image site we are adding.
-
-````
-function splotboxplus_image_allowables() {
-	/* add domain fragments to identify supported image type URLs
-	   called by SPLOTbox includes/media.php --> url_is_image ( $url )
-	   
-	   $allowables = array(); for none
-	*/
-	
-	$allowables = array('imgur.com')
-
-	return $allowables;
-}
-````
-
-Now we make sure all of the WordPress supported services we ae added are included in the `splotboxplus_embed_allowables()` function
-
-````
-function splotboxplus_embed_allowables() {
-	/* add domain fragments to identify string match supported embeddable media beyond
-	   ones supported by SPLOTbox
-	   e.g. from https://wordpress.org/support/article/embeds/#okay-so-what-sites-can-i-embed-from
-	   called by SPLOTbox includes/media.php --> is_url_embeddable( $url )
-	
-	   $allowables = array(); for none
-	*/
-
-	$allowables = array('dailymotion.com', 'animoto.com', 'imgur.com');
+	$allowables = array('animoto.com', 'dailymotion.com', 'metacafe.com', 'video.bccampus.ca/media', 'media.kpu.ca/media');
 
 	return $allowables;
 }
 
-````
 
-Any of these can be undone by changing the return value for `$supports` or `$allowables` to be `array()`.
-
-
-## Extending For Other Sites With URLs that can be Pattern Matched to Embed `
-
-Setting these up requires a bit more code work. For this example, we are going to add support to the for the Podcast service [Transistor.fm](http://transistor.fm) - see this in action at  Chad Flinn's [Open Pedagogy Playlist](http://openpedagogyplaylist.com/).
-
-If we are adding it to the ones above, we would update the `splotboxplus_supports()` function to now read:
-
-````
-function splotboxplus_supports() {
-	/* array of names of all sites added via this plugin, used for display on share form
-       called by SPLOTbox includes/media.php --> splotbox_supports()
-	   $supports = array(); for none
-	*/
-	
-	$supports = array('Animoto', 'Transitor.fm', 'Imgur', 'Daily Motion');
-	return $supports;
-}
-````
-
-If this was the only service we were adding, this would look like:
-
-````
-function splotboxplus_supports() {
-	/* array of names of all sites added via this plugin, used for display on share form
-       called by SPLOTbox includes/media.php --> splotbox_supports()
-	   $supports = array(); for none
-	*/
-	
-	$supports = array('Transitor.fm');
-	return $supports;
-}
-````
-
-Since this is an audio service, we need to make sure it's URL pattern is included in the `splotboxplus_audio_allowables()` function:
-
-````
 function splotboxplus_audio_allowables() {
-	/* add domain fragments to identify supported audio type URLs
-	   called by SPLOTbox includes/media.php --> url_is_audio ( $url )
-	   
-	   $allowables = array(); for none
-	*/
+	// Add domain match strings to identify supported audio type URLs
+	// e.g.
+	// $allowables = array('share.transistor.fm');
+	// $allowables = array(); for none
+
 	$allowables = array('share.transistor.fm');
 
 	return $allowables;
 }
-````
 
-Finally, for each service we are writing a custom link to embed interpreter, we add an entry to the function `splotboxplus_get_mediaplayer( $url )`.
+function splotboxplus_image_allowables() {
+	// Add domain match strings to identify supported image type URLs
+	// $allowables = array(); for none
+	// $allowables = array('imgur.com')
 
-````
+	$allowables = array('imgur.com');
+
+	return $allowables;
+}
+```
+
+Any of these can be undone by using
+
+```
+	// $allowables = array(); for none
+```
+
+
+### Identify URL Pattern For WordPress Embed or oEmbed
+
+This function requires a URL pattern that identifies a web address as one supported by WordPress built in embed support OR one added later in the plugin as an oEmbed Provider. In this example, we have a mix of both types.
+
+```
+function splotboxplus_embed_allowables() {
+	// add domain fragments to identify WordPress supported embeddable media beyond
+	// YouTube, vimeo, soundcloud, TED, giphy
+	// from https://wordpress.org/support/article/embeds/#okay-so-what-sites-can-i-embed-from
+
+	// as well as ones added as oembed providers via splotboxplus_add_oembed_handlers()
+
+	// e.g. $allowables = array('dailymotion.com', 'imgur.com', 'video.bccampus.ca/media');
+	// $allowables = array(); for none
+
+	$allowables = array('dailymotion.com', 'animoto.com', 'imgur.com', 'video.bccampus.ca/media', 'media.kpu.ca/media');
+
+	return $allowables;
+}
+```
+
+This can be undone by using
+
+```
+	// $allowables = array(); for none
+```
+
+### Add Support for oEmbed Providers
+
+Any service using it's own oEmbed provider needs to be added as well. The trickiest part here is getting the pattern match! Each additional server needs an entry. These examples are for Kaltura media servers (using the patterns that allow users to enter the URL for the content, no need to fish for oEmbed URLs)
+
+```
+function splotboxplus_add_oembed_handlers(){
+	// add/edit this statement as needed to match the oembed format of whatever service is added
+	//    c.f. https://developer.wordpress.org/reference/functions/wp_oembed_add_provider/
+	//
+	//    e.g.
+	// wp_oembed_add_provider( 'https://video.bccampus.ca/media/*', 'https://video.bccampus.ca/oembed/', false );
+
+	// BC Campus Kaltura
+    wp_oembed_add_provider( 'https://video.bccampus.ca/media/*', 'https://video.bccampus.ca/oembed/', false );
+
+    // KPU Kaltura
+    wp_oembed_add_provider( 'https://media.kpu.ca/media/*', 'https://media.kpu.ca/oembed/', false );
+}
+
+```
+
+Enabling oEmbed from Kaltura requires [administrative settings on the server](https://knowledge.kaltura.com/help/grab-embed-option-added-to-kaf-based-applications). 
+
+## Extending For WordPress Supported Embed sites
+
+
+
+### Extending For Other Sites With URLs that can be Pattern Matched to Embed `
+
+These qre for sites not supported by WordPress embeds nor offer an oEmbed provider. Support can be achieved by custom functions to parse a URL for a specifif media site in way to determine it's embed code.
+
+This requires a bit more code work. For this example, we are going to add support to the for the Podcast service [Transistor.fm](http://transistor.fm) - see this in action at Chad Flinn's [Open Pedagogy Playlist](http://openpedagogyplaylist.com/).
+
+
+For each service we are writing a custom link to embed interpreter, we add an entry to the function `splotboxplus_get_mediaplayer( $url )` each one is invoked by pattern matching the incoming URL
+
+```
 function  splotboxplus_get_mediaplayer( $url ) {
 	/*	Custom functions for creating embed codes from URLs, e.g. for 
 	    ones not supported directly by WordPress. Generally this is parsing
@@ -201,8 +208,10 @@ function  splotboxplus_get_mediaplayer( $url ) {
 	return '';
 
 }
-````
+```
 
-## Get the gist of it
+### Get the gist of it
 
 * [splotbox-extender-splotca.php](https://gist.github.com/cogdog/3c26a103c020b1835c38547db6a534fd) You can look at version of the SPLOTbox Extender plugin in use at http://splot.ca/box
+
+
