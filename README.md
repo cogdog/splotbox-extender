@@ -150,6 +150,11 @@ This can be undone by using
 Any service using it's own oEmbed provider needs to be added as well. The trickiest part here is getting the pattern match! Each additional server needs an entry. These examples are for Kaltura media servers (using the patterns that allow users to enter the URL for the content, no need to fish for oEmbed URLs)
 
 ```
+// here we set up oEmbed providers
+// comment this line out if no oEmbed providers are used or to disable
+add_action( 'init', 'splotboxplus_add_oembed_handlers');
+
+
 function splotboxplus_add_oembed_handlers(){
 	// add/edit this statement as needed to match the oembed format of whatever service is added
 	//    c.f. https://developer.wordpress.org/reference/functions/wp_oembed_add_provider/
