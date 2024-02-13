@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: SPLOTbox Extender
+Plugin Name: SPLOTbox Extender for Starscapes
 Plugin URI: https://github.com/cogdog/splotbox-extender
-Description: With some elbow grease manual coding, you can extend the functionality of a SPLOTbox site to support more media sites than the original theme.
-Version: 0.6
+Description: Adds Kaltura support specifically for our friends at LCC
+Version: 0.63
 License: GPLv2
 Author: Alan Levine
 Author URI: https://cog.dog
@@ -25,7 +25,7 @@ function splotboxplus_supports( ) {
 	// e.g.
 	// $supports = array('Metacafe', 'Transistor', 'Imgur', 'Big Kaltura^' );
 
-	$supports = array('Animoto', 'Metacafe', 'Transistor', 'Imgur', 'Daily Motion', 'BC Campus Kaltura', 'KPU Kaltura', 'TRU Media');
+	$supports = array('LCC Kaltura');
 
 	return $supports;
 }
@@ -35,7 +35,7 @@ function splotboxplus_video_allowables() {
 	// e.g. $allowables = array('animoto.com', 'dailymotion.com', 'metacafe.com', 'video.bigu.ca/id');
 	// $allowables = array(); for none
 
-	$allowables = array('animoto.com', 'dailymotion.com', 'metacafe.com', 'video.bccampus.ca/media', 'media.kpu.ca/media', 'media.tru.ca/media/');
+	$allowables = array('mediaspace.lcc.edu/media');
 
 	return $allowables;
 }
@@ -47,7 +47,7 @@ function splotboxplus_audio_allowables() {
 	// $allowables = array('share.transistor.fm');
 	// $allowables = array(); for none
 
-	$allowables = array('share.transistor.fm');
+	//$allowables = array('share.transistor.fm');
 
 	return $allowables;
 }
@@ -57,7 +57,7 @@ function splotboxplus_image_allowables() {
 	// $allowables = array(); for none
 	// $allowables = array('imgur.com')
 
-	$allowables = array('imgur.com');
+	//$allowables = array('imgur.com');
 
 	return $allowables;
 }
@@ -73,7 +73,8 @@ function splotboxplus_embed_allowables() {
 	// e.g. $allowables = array('dailymotion.com', 'imgur.com', 'video.bccampus.ca/id');
 	// $allowables = array(); for none
 
-	$allowables = array('dailymotion.com', 'animoto.com', 'imgur.com', 'video.bccampus.ca/media', 'media.kpu.ca/media', 'media.tru.ca/media/');
+
+	$allowables = array('mediaspace.lcc.edu/media');
 
 	return $allowables;
 }
@@ -90,14 +91,8 @@ function splotboxplus_add_oembed_handlers(){
 	// wp_oembed_add_provider( 'https://video.bccampus.ca/id/*', 'https://video.bccampus.ca/oembed/', false );
 
 
-	// BC Campus Kaltura
-    wp_oembed_add_provider( 'https://video.bccampus.ca/media/*', 'https://video.bccampus.ca/oembed/', false );
-
-    // TRU Kaltura
-    wp_oembed_add_provider( 'https://media.tru.ca/media/*', 'https://media.tru.ca/oembed/', false );
-
-    // KPU Kaltura
-    wp_oembed_add_provider( 'https://media.kpu.ca/media/*', 'https://media.kpu.ca/oembed/', false );
+	// LCC Kaltura
+    wp_oembed_add_provider( 'https://mediaspace.lcc.edu/media/*', 'https://mediaspace.lcc.edu/oembed/', false );
 }
 
 
