@@ -1,6 +1,6 @@
-# SPLOTbox Extender Plugin
+# SPLOTbox Extender Plugin Special for Starscapes
 
-A WordPress plugin that extends the range of media sites supported by the SPLOTbox theme.
+A WordPress plugin that extends the range of media sites supported by the SPLOTbox theme, this version is a spin off to work for https://starscapes.openlcc.net/
 
 by Alan Levine https://cog.dog or http://cogdogblog.com/
 
